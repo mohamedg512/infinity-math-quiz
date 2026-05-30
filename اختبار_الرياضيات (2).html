@@ -1,0 +1,1284 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>اختبار الرياضيات — صح أم خطأ</title>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@300;400;600;700;900&family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* ===== COLORS FROM INFINITY_MOHAMED LOGO ===== */
+  /* Primary: Deep Blue #1a3a8f → Mid Blue #1565c0 */
+  /* Accent:  Teal/Cyan  #00bcd4 → Turquoise #00e5c8 */
+
+  :root {
+    /* Dark mode (default) */
+    --bg: #050d1f;
+    --surface: #0a1628;
+    --surface2: #0f2040;
+    --surface3: #162a52;
+    --primary: #1a6fd4;
+    --primary-light: #4da6ff;
+    --primary-dim: rgba(26,111,212,0.15);
+    --teal: #00d4c8;
+    --teal-light: #4fffeb;
+    --teal-dim: rgba(0,212,200,0.12);
+    --correct: #22c55e;
+    --correct-dim: rgba(34,197,94,0.15);
+    --wrong: #ef4444;
+    --wrong-dim: rgba(239,68,68,0.15);
+    --text: #e2eeff;
+    --text-muted: #7a9cc8;
+    --border: rgba(0,212,200,0.25);
+    --border-soft: rgba(255,255,255,0.07);
+    --ch1: #1a6fd4; --ch1d: rgba(26,111,212,0.15);
+    --ch2: #00bcd4; --ch2d: rgba(0,188,212,0.15);
+    --ch3: #1565c0; --ch3d: rgba(21,101,192,0.15);
+    --ch4: #0097a7; --ch4d: rgba(0,151,167,0.15);
+    --r: 14px;
+    --shadow-glow: 0 8px 32px rgba(0,212,200,0.2);
+  }
+
+  /* ===== LIGHT MODE ===== */
+  body.light-mode {
+    --bg: #eef4ff;
+    --surface: #ffffff;
+    --surface2: #ddeaff;
+    --surface3: #c8daf8;
+    --primary: #1a6fd4;
+    --primary-light: #0d4fa8;
+    --primary-dim: rgba(26,111,212,0.1);
+    --teal: #009e94;
+    --teal-light: #006f66;
+    --teal-dim: rgba(0,158,148,0.1);
+    --correct: #16a34a;
+    --correct-dim: rgba(22,163,74,0.12);
+    --wrong: #dc2626;
+    --wrong-dim: rgba(220,38,38,0.12);
+    --text: #0d1f3c;
+    --text-muted: #3d6199;
+    --border: rgba(26,111,212,0.3);
+    --border-soft: rgba(26,111,212,0.12);
+    --ch1: #1a6fd4; --ch1d: rgba(26,111,212,0.1);
+    --ch2: #0097a7; --ch2d: rgba(0,151,167,0.1);
+    --ch3: #1565c0; --ch3d: rgba(21,101,192,0.1);
+    --ch4: #00838f; --ch4d: rgba(0,131,143,0.1);
+    --shadow-glow: 0 8px 32px rgba(26,111,212,0.15);
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Cairo', 'Noto Naskh Arabic', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ---- BACKGROUND GRID ---- */
+  body::before {
+    content:'';
+    position:fixed; inset:0;
+    background-image:
+      linear-gradient(rgba(0,212,200,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,212,200,0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events:none; z-index:0;
+  }
+  body.light-mode::before {
+    background-image:
+      linear-gradient(rgba(26,111,212,0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(26,111,212,0.06) 1px, transparent 1px);
+  }
+
+  /* ---- HEADER ---- */
+  header {
+    position: relative;
+    padding: 60px 24px 50px;
+    text-align: center;
+    overflow: hidden;
+  }
+  header::before {
+    content:'';
+    position:absolute; inset:0;
+    background: radial-gradient(ellipse 80% 100% at 50% -20%,
+      rgba(26,111,212,0.2) 0%, transparent 70%);
+    pointer-events:none;
+  }
+
+  .header-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--teal-dim);
+    border: 1px solid var(--teal);
+    border-radius: 100px;
+    padding: 6px 18px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--teal-light);
+    letter-spacing: 1px;
+    margin-bottom: 24px;
+    animation: fadeDown 0.6s ease both;
+  }
+
+  h1 {
+    font-family: 'Amiri', serif;
+    font-size: clamp(2rem, 5vw, 3.6rem);
+    font-weight: 700;
+    color: var(--primary-light);
+    line-height: 1.2;
+    margin-bottom: 12px;
+    animation: fadeDown 0.7s ease 0.1s both;
+  }
+
+  .subtitle {
+    font-size: 15px;
+    color: var(--text-muted);
+    margin-bottom: 40px;
+    animation: fadeDown 0.7s ease 0.2s both;
+  }
+
+  /* ---- STATS BAR ---- */
+  .stats-bar {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+    animation: fadeDown 0.7s ease 0.3s both;
+  }
+
+  .stat-chip {
+    background: var(--surface2);
+    border: 1px solid var(--border-soft);
+    border-radius: 100px;
+    padding: 8px 20px;
+    font-size: 13px;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.3s;
+  }
+  .stat-chip .val {
+    color: var(--teal-light);
+    font-weight: 700;
+    font-size: 15px;
+    min-width: 24px;
+    text-align: center;
+  }
+
+  /* ---- PROGRESS ---- */
+  .progress-wrap {
+    max-width: 500px;
+    margin: 0 auto 50px;
+    animation: fadeDown 0.7s ease 0.4s both;
+  }
+  .progress-track {
+    height: 6px;
+    background: var(--surface3);
+    border-radius: 100px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary), var(--teal));
+    border-radius: 100px;
+    width: 0%;
+    transition: width 0.5s cubic-bezier(0.4,0,0.2,1);
+  }
+  .progress-label {
+    text-align: center;
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 8px;
+  }
+  .progress-label span { color: var(--teal); font-weight: 700; }
+
+  /* ---- CHAPTER TABS ---- */
+  .tabs {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    padding: 0 24px 32px;
+    animation: fadeDown 0.7s ease 0.5s both;
+    position: relative; z-index:1;
+  }
+
+  .tab {
+    padding: 9px 20px;
+    border-radius: 100px;
+    border: 1px solid var(--border-soft);
+    background: var(--surface2);
+    color: var(--text-muted);
+    font-size: 13px;
+    font-weight: 600;
+    font-family: 'Cairo', sans-serif;
+    cursor: pointer;
+    transition: all 0.25s;
+  }
+  .tab:hover { border-color: var(--teal); color: var(--teal-light); }
+  .tab.active {
+    background: linear-gradient(135deg, var(--primary), var(--teal));
+    border-color: transparent;
+    color: #fff;
+  }
+
+  /* ---- MAIN CONTENT ---- */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 24px 120px;
+    position: relative; z-index:1;
+  }
+
+  /* ---- CHAPTER BLOCK ---- */
+  .chapter-block {
+    margin-bottom: 40px;
+    animation: fadeUp 0.6s ease both;
+  }
+  .chapter-block:nth-child(2) { animation-delay: 0.1s; }
+  .chapter-block:nth-child(3) { animation-delay: 0.2s; }
+  .chapter-block:nth-child(4) { animation-delay: 0.3s; }
+
+  .chapter-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 16px;
+    padding: 18px 24px;
+    border-radius: var(--r);
+    position: relative;
+    overflow: hidden;
+  }
+  .chapter-header::before {
+    content:'';
+    position:absolute; inset:0;
+    border-radius: var(--r);
+    opacity: 0.12;
+  }
+  .ch1 .chapter-header { background: var(--ch1d); border: 1px solid rgba(124,58,237,0.3); }
+  .ch1 .chapter-header::before { background: var(--ch1); }
+  .ch2 .chapter-header { background: var(--ch2d); border: 1px solid rgba(8,145,178,0.3); }
+  .ch2 .chapter-header::before { background: var(--ch2); }
+  .ch3 .chapter-header { background: var(--ch3d); border: 1px solid rgba(217,119,6,0.3); }
+  .ch3 .chapter-header::before { background: var(--ch3); }
+  .ch4 .chapter-header { background: var(--ch4d); border: 1px solid rgba(220,38,38,0.3); }
+  .ch4 .chapter-header::before { background: var(--ch4); }
+
+  .ch-num {
+    width: 48px; height: 48px;
+    border-radius: 12px;
+    display: flex; align-items:center; justify-content:center;
+    font-family: 'Amiri', serif;
+    font-size: 22px; font-weight: 700;
+    flex-shrink: 0;
+  }
+  .ch1 .ch-num { background: var(--ch1); color: #fff; }
+  .ch2 .ch-num { background: var(--ch2); color: #fff; }
+  .ch3 .ch-num { background: var(--ch3); color: #fff; }
+  .ch4 .ch-num { background: var(--ch4); color: #fff; }
+
+  .ch-info { flex: 1; }
+  .ch-title {
+    font-family: 'Amiri', serif;
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 2px;
+  }
+  .ch-meta { font-size: 12px; color: var(--text-muted); }
+  .ch-score-badge {
+    background: var(--surface3);
+    border-radius: 100px;
+    padding: 6px 14px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-muted);
+    transition: all 0.3s;
+  }
+
+  /* ---- QUESTION CARD ---- */
+  .q-card {
+    background: var(--surface);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--r);
+    padding: 0;
+    margin-bottom: 10px;
+    transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+    overflow: hidden;
+    position: relative;
+  }
+  .q-card:hover { border-color: var(--border); transform: translateX(-2px); }
+
+  .q-inner {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    padding: 16px 18px;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .q-num {
+    width: 34px; height: 34px;
+    border-radius: 8px;
+    background: var(--surface2);
+    display: flex; align-items:center; justify-content:center;
+    font-size: 12px; font-weight: 700;
+    color: var(--text-muted);
+    flex-shrink: 0;
+    margin-left: 14px;
+    font-family: 'Cairo', sans-serif;
+    transition: all 0.3s;
+  }
+
+  .q-text {
+    flex: 1;
+    font-size: 14.5px;
+    line-height: 1.8;
+    color: var(--text);
+    font-family: 'Noto Naskh Arabic', serif;
+    direction: rtl;
+  }
+
+  .q-math {
+    font-family: 'Amiri', serif;
+    color: var(--teal);
+    font-size: 15px;
+  }
+
+  /* Toggle Buttons */
+  .q-btns {
+    display: flex;
+    gap: 6px;
+    flex-shrink: 0;
+    margin-right: 14px;
+  }
+
+  .btn-tf {
+    width: 44px; height: 36px;
+    border-radius: 8px;
+    border: 1.5px solid var(--border-soft);
+    background: var(--surface2);
+    color: var(--text-muted);
+    font-size: 18px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex; align-items:center; justify-content:center;
+    font-family: 'Cairo', sans-serif;
+  }
+  .btn-tf:hover { border-color: var(--teal); color: var(--teal-light); }
+  .btn-tf.selected-true {
+    background: rgba(34,197,94,0.2);
+    border-color: var(--correct);
+    color: var(--correct);
+  }
+  .btn-tf.selected-false {
+    background: rgba(239,68,68,0.2);
+    border-color: var(--wrong);
+    color: var(--wrong);
+  }
+
+  /* Result States */
+  .q-card.result-correct {
+    border-color: var(--correct);
+    background: var(--correct-dim);
+    transform: translateX(0) !important;
+  }
+  .q-card.result-wrong {
+    border-color: var(--wrong);
+    background: var(--wrong-dim);
+    transform: translateX(0) !important;
+  }
+  .q-card.result-correct .q-num { background: var(--correct); color: #fff; }
+  .q-card.result-wrong .q-num { background: var(--wrong); color: #fff; }
+
+  .q-result-icon {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    display: none;
+    align-items:center; justify-content:center;
+    font-size: 14px;
+    flex-shrink: 0;
+    margin-right: 10px;
+    font-weight: 700;
+  }
+  .result-correct .q-result-icon { display:flex; background: var(--correct); color:#fff; }
+  .result-wrong .q-result-icon { display:flex; background: var(--wrong); color:#fff; }
+
+  .q-explanation {
+    display: none;
+    padding: 10px 18px 14px;
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--text-muted);
+    border-top: 1px solid var(--border-soft);
+    font-family: 'Cairo', sans-serif;
+  }
+  .q-explanation strong { color: var(--teal-light); }
+  .result-wrong .q-explanation { display: block; }
+
+  /* ---- SUBMIT BUTTON ---- */
+  .submit-wrap {
+    display: flex;
+    justify-content: center;
+    padding: 40px 24px;
+    position: relative; z-index:1;
+  }
+
+  .btn-submit {
+    background: linear-gradient(135deg, var(--primary), var(--teal));
+    color: #fff;
+    border: none;
+    border-radius: 100px;
+    padding: 16px 56px;
+    font-family: 'Cairo', sans-serif;
+    font-size: 17px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: var(--shadow-glow);
+    position: relative;
+    overflow: hidden;
+  }
+  .btn-submit::before {
+    content:'';
+    position:absolute; inset:0;
+    background: linear-gradient(135deg, transparent, rgba(255,255,255,0.2), transparent);
+    transform: translateX(-100%);
+    transition: transform 0.5s;
+  }
+  .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(0,212,200,0.35); }
+  .btn-submit:hover::before { transform: translateX(100%); }
+  .btn-submit:active { transform: translateY(0); }
+
+  /* ---- RESULT MODAL ---- */
+  .result-overlay {
+    position: fixed; inset:0;
+    background: rgba(0,0,0,0.85);
+    backdrop-filter: blur(10px);
+    z-index: 1000;
+    display: flex; align-items:center; justify-content:center;
+    opacity: 0; pointer-events:none;
+    transition: opacity 0.4s;
+    padding: 24px;
+  }
+  .result-overlay.show { opacity:1; pointer-events:all; }
+
+  .result-modal {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 48px 40px;
+    max-width: 560px;
+    width: 100%;
+    text-align: center;
+    transform: scale(0.9) translateY(20px);
+    transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
+    position: relative;
+    overflow: hidden;
+  }
+  .result-overlay.show .result-modal { transform: scale(1) translateY(0); }
+
+  .result-modal::before {
+    content:'';
+    position:absolute; top:-100px; left:50%; transform:translateX(-50%);
+    width:400px; height:400px;
+    border-radius:50%;
+    pointer-events:none;
+    transition: all 0.5s;
+  }
+  .grade-excellent .result-modal::before { background: radial-gradient(circle, rgba(34,197,94,0.15) 0%, transparent 70%); }
+  .grade-good .result-modal::before { background: radial-gradient(circle, rgba(26,111,212,0.15) 0%, transparent 70%); }
+  .grade-poor .result-modal::before { background: radial-gradient(circle, rgba(239,68,68,0.15) 0%, transparent 70%); }
+
+  .result-emoji {
+    font-size: 64px;
+    margin-bottom: 16px;
+    display: block;
+    animation: bounceIn 0.6s cubic-bezier(0.34,1.56,0.64,1) 0.3s both;
+  }
+
+  .result-grade {
+    font-family: 'Amiri', serif;
+    font-size: 54px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    animation: fadeUp 0.5s ease 0.4s both;
+  }
+  .grade-excellent .result-grade { color: var(--correct); }
+  .grade-good .result-grade { color: var(--teal-light); }
+  .grade-poor .result-grade { color: var(--wrong); }
+
+  .result-label {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    animation: fadeUp 0.5s ease 0.5s both;
+  }
+  .result-sublabel {
+    font-size: 14px;
+    color: var(--text-muted);
+    margin-bottom: 32px;
+    animation: fadeUp 0.5s ease 0.6s both;
+  }
+
+  .result-breakdown {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 32px;
+    animation: fadeUp 0.5s ease 0.7s both;
+  }
+
+  .rb-card {
+    background: var(--surface2);
+    border-radius: 12px;
+    padding: 14px;
+    text-align: center;
+  }
+  .rb-card .rb-val {
+    font-size: 24px;
+    font-weight: 700;
+    font-family: 'Cairo', sans-serif;
+    margin-bottom: 2px;
+  }
+  .rb-card .rb-label { font-size: 12px; color: var(--text-muted); }
+  .rb-correct .rb-val { color: var(--correct); }
+  .rb-wrong .rb-val { color: var(--wrong); }
+  .rb-pct .rb-val { color: var(--teal-light); }
+  .rb-unanswered .rb-val { color: var(--text-muted); }
+
+  .chapter-breakdown {
+    margin-bottom: 32px;
+    animation: fadeUp 0.5s ease 0.8s both;
+    text-align: right;
+  }
+  .cb-title {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+    font-weight: 600;
+    text-align: center;
+  }
+  .cb-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+  .cb-name {
+    font-size: 12px;
+    color: var(--text-muted);
+    width: 160px;
+    text-align: right;
+    flex-shrink: 0;
+  }
+  .cb-bar-track {
+    flex: 1;
+    height: 8px;
+    background: var(--surface3);
+    border-radius: 100px;
+    overflow: hidden;
+  }
+  .cb-bar-fill {
+    height: 100%;
+    border-radius: 100px;
+    transition: width 1s cubic-bezier(0.4,0,0.2,1) 0.5s;
+  }
+  .cb-pct {
+    font-size: 12px;
+    font-weight: 700;
+    width: 36px;
+    text-align: left;
+    flex-shrink: 0;
+  }
+
+  .result-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    animation: fadeUp 0.5s ease 0.9s both;
+  }
+  .btn-action {
+    padding: 12px 28px;
+    border-radius: 100px;
+    font-family: 'Cairo', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s;
+    border: none;
+  }
+  .btn-primary {
+    background: linear-gradient(135deg, var(--primary), var(--teal));
+    color: #fff;
+  }
+  .btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
+  .btn-secondary {
+    background: var(--surface2);
+    color: var(--text);
+    border: 1px solid var(--border-soft);
+  }
+  .btn-secondary:hover { border-color: var(--primary); color: var(--teal-light); }
+
+  /* Floating score */
+  .floating-score {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 100;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 12px 18px;
+    display: flex;
+    gap: 14px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.4);
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: all 0.4s;
+    font-size: 13px;
+  }
+  .floating-score.visible { opacity:1; transform: translateY(0); }
+  .fs-item { display:flex; align-items:center; gap:5px; }
+  .fs-item .dot { width:8px; height:8px; border-radius:50%; }
+  .fs-item .dot.correct { background: var(--correct); }
+  .fs-item .dot.wrong { background: var(--wrong); }
+  .fs-item .count { font-weight:700; }
+
+  /* ---- ANIMATIONS ---- */
+  @keyframes fadeDown {
+    from { opacity:0; transform: translateY(-16px); }
+    to { opacity:1; transform: translateY(0); }
+  }
+  @keyframes fadeUp {
+    from { opacity:0; transform: translateY(16px); }
+    to { opacity:1; transform: translateY(0); }
+  }
+  @keyframes bounceIn {
+    from { opacity:0; transform: scale(0.3); }
+    to { opacity:1; transform: scale(1); }
+  }
+  @keyframes pulse {
+    0%,100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+  }
+
+  /* ---- CONFETTI ---- */
+  .confetti-piece {
+    position: fixed;
+    width: 10px; height: 10px;
+    border-radius: 2px;
+    pointer-events: none;
+    z-index: 2000;
+    animation: confettiFall linear forwards;
+  }
+  @keyframes confettiFall {
+    0%   { transform: translateY(-20px) rotate(0deg); opacity:1; }
+    100% { transform: translateY(100vh) rotate(720deg); opacity:0; }
+  }
+
+  /* unanswered flash */
+  @keyframes flashRed {
+    0%,100% { border-color: var(--border-soft); }
+    50% { border-color: var(--wrong); box-shadow: 0 0 0 2px rgba(239,68,68,0.3); }
+  }
+  .q-card.unanswered { animation: flashRed 0.5s ease 3; }
+
+  /* ===== SPLASH SCREEN ===== */
+  #splash {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg);
+    transition: opacity 0.8s ease;
+  }
+  #splash.fade-out {
+    opacity: 0;
+    pointer-events: none;
+  }
+  #splash.hidden {
+    display: none;
+  }
+
+  .splash-logo {
+    width: 220px;
+    height: 220px;
+    object-fit: contain;
+    border-radius: 24px;
+    animation: splashIn 0.9s cubic-bezier(0.34,1.56,0.64,1) both;
+    filter: drop-shadow(0 0 40px rgba(0,212,200,0.35));
+  }
+  @keyframes splashIn {
+    from { opacity: 0; transform: scale(0.6) translateY(30px); }
+    to   { opacity: 1; transform: scale(1) translateY(0); }
+  }
+
+  .splash-bar {
+    margin-top: 36px;
+    width: 180px;
+    height: 4px;
+    background: var(--surface3);
+    border-radius: 100px;
+    overflow: hidden;
+  }
+  .splash-bar-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--primary), var(--teal));
+    border-radius: 100px;
+    animation: splashLoad 2.4s ease forwards 0.3s;
+  }
+  @keyframes splashLoad {
+    from { width: 0%; }
+    to   { width: 100%; }
+  }
+
+  /* ===== CORNER LOGO ===== */
+  .corner-logo {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 150;
+    width: 72px;
+    height: 72px;
+    object-fit: contain;
+    border-radius: 16px;
+    opacity: 0;
+    transform: scale(0.8);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+    filter: drop-shadow(0 4px 12px rgba(0,0,0,0.3));
+    cursor: pointer;
+  }
+  .corner-logo.visible {
+    opacity: 1;
+    transform: scale(1);
+  }
+  .corner-logo:hover {
+    transform: scale(1.1);
+    filter: drop-shadow(0 6px 20px rgba(0,212,200,0.4));
+  }
+
+  /* ===== THEME TOGGLE BUTTON ===== */
+  .theme-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 200;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: 1.5px solid var(--border);
+    background: var(--surface);
+    color: var(--teal);
+    font-size: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  }
+  .theme-toggle:hover {
+    background: var(--primary-dim);
+    border-color: var(--teal);
+    transform: rotate(20deg) scale(1.1);
+  }
+
+  .hidden { display: none !important; }
+</style>
+</head>
+<body>
+
+<!-- Splash Screen -->
+<div id="splash">
+  <img src="logo.jpg" alt="Infinity Mohamed" class="splash-logo">
+  <div class="splash-bar">
+    <div class="splash-bar-fill"></div>
+  </div>
+</div>
+
+<!-- Corner Logo -->
+<img src="logo.jpg" alt="Infinity Mohamed" class="corner-logo" id="cornerLogo">
+
+<!-- Theme Toggle -->
+<button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="تبديل الوضع الليلي/النهاري">🌙</button>
+
+<!-- Floating Live Score -->
+<div class="floating-score" id="floatingScore">
+  <div class="fs-item">
+    <div class="dot correct"></div>
+    <span class="count" id="fsCorrect">0</span>
+    <span style="color:var(--text-muted)">صح</span>
+  </div>
+  <div class="fs-item">
+    <div class="dot wrong"></div>
+    <span class="count" id="fsWrong">0</span>
+    <span style="color:var(--text-muted)">خطأ</span>
+  </div>
+</div>
+
+<!-- Header -->
+<header>
+  <div class="header-badge">✦ السنة الثالثة ثانوي — الجزء الأول</div>
+  <h1>اختبار الرياضيات</h1>
+  <p class="subtitle">صح أم خطأ · 60 سؤالاً · يغطي الفصول الأربعة الأساسية</p>
+
+  <div class="stats-bar">
+    <div class="stat-chip">📝 <span class="val" id="statAnswered">0</span> / 60 سؤال</div>
+    <div class="stat-chip">⏱️ <span class="val" id="statTime">00:00</span> دقيقة</div>
+    <div class="stat-chip">✅ <span class="val" id="statCorrect">—</span> صحيح</div>
+  </div>
+
+  <div class="progress-wrap">
+    <div class="progress-track">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+    <div class="progress-label">تقدمك: <span id="progressPct">0%</span></div>
+  </div>
+</header>
+
+<!-- Chapter Tabs -->
+<div class="tabs">
+  <button class="tab active" onclick="scrollToChapter('all', this)">الكل</button>
+  <button class="tab" onclick="scrollToChapter('ch1', this)">📐 النهايات</button>
+  <button class="tab" onclick="scrollToChapter('ch2', this)">∫ الاشتقاق</button>
+  <button class="tab" onclick="scrollToChapter('ch3', this)">eˣ الأسية</button>
+  <button class="tab" onclick="scrollToChapter('ch4', this)">ⁿ√ الجذر</button>
+</div>
+
+<!-- Questions -->
+<main id="main"></main>
+
+<!-- Submit -->
+<div class="submit-wrap">
+  <button class="btn-submit" onclick="submitQuiz()">
+    🎯 تصحيح الاختبار
+  </button>
+</div>
+
+<!-- Result Modal -->
+<div class="result-overlay" id="resultOverlay">
+  <div class="result-modal" id="resultModal">
+    <span class="result-emoji" id="resultEmoji">🎓</span>
+    <div class="result-grade" id="resultGrade">—/60</div>
+    <div class="result-label" id="resultLabel">—</div>
+    <div class="result-sublabel" id="resultSublabel">—</div>
+
+    <div class="result-breakdown">
+      <div class="rb-card rb-correct">
+        <div class="rb-val" id="rbCorrect">0</div>
+        <div class="rb-label">إجابات صحيحة</div>
+      </div>
+      <div class="rb-card rb-wrong">
+        <div class="rb-val" id="rbWrong">0</div>
+        <div class="rb-label">إجابات خاطئة</div>
+      </div>
+      <div class="rb-card rb-pct">
+        <div class="rb-val" id="rbPct">0%</div>
+        <div class="rb-label">المعدل</div>
+      </div>
+      <div class="rb-card rb-unanswered">
+        <div class="rb-val" id="rbUnanswered">0</div>
+        <div class="rb-label">بدون إجابة</div>
+      </div>
+    </div>
+
+    <div class="chapter-breakdown">
+      <div class="cb-title">الأداء حسب الفصل</div>
+      <div class="cb-row" id="cbRow1"></div>
+      <div class="cb-row" id="cbRow2"></div>
+      <div class="cb-row" id="cbRow3"></div>
+      <div class="cb-row" id="cbRow4"></div>
+    </div>
+
+    <div class="result-actions">
+      <button class="btn-action btn-primary" onclick="closeResult()">مراجعة الإجابات</button>
+      <button class="btn-action btn-secondary" onclick="resetQuiz()">إعادة الاختبار</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const QUESTIONS = [
+  // Chapter 1: النهايات والاستمرارية (1-15)
+  { id:1, ch:1, text:'إذا كان lim f(x) = l عند +∞، فإن المستقيم y = l هو مستقيم مقارب أفقي للمنحني (C_f) عند +∞.', math:true, answer:true, exp:'' },
+  { id:2, ch:1, text:'إذا كانت f دالة معرفة على ]x₀ ; +∞[ فإن نهايتها عند +∞ لا بد أن تكون منتهية.', math:false, answer:false, exp:'النهاية قد تكون غير منتهية (+∞ أو -∞) أو حتى غير موجودة.' },
+  { id:3, ch:1, text:'lim (1/x) = 0 عند x → +∞.', math:true, answer:true, exp:'' },
+  { id:4, ch:1, text:'إذا كانت lim f(x) = +∞ و lim g(x) = −∞ عند +∞، فإن lim [f(x) + g(x)] = 0.', math:true, answer:false, exp:'الشكل (+∞ − ∞) هو شكل عدم تحديد، نتيجته غير معلومة مسبقاً.' },
+  { id:5, ch:1, text:'إذا كانت lim f(x) = +∞ و lim g(x) = l > 0 عند +∞، فإن lim [f(x) × g(x)] = +∞.', math:true, answer:true, exp:'' },
+  { id:6, ch:1, text:'المستقيم y = ax + b هو مستقيم مقارب مائل للدالة f عند +∞ إذا وفقط إذا: lim [f(x) − (ax+b)] = 0 عند x → +∞.', math:true, answer:true, exp:'' },
+  { id:7, ch:1, text:'إذا كانت f مستمرة على [a, b] وكان f(a) × f(b) < 0، فإن المعادلة f(x) = 0 لها حل وحيد في ]a, b[.', math:true, answer:false, exp:'مبرهنة القيم المتوسطة تضمن وجود حل واحد على الأقل، لا حلاً وحيداً. وجود حل وحيد يتطلب إضافة شرط الرتابة الصارمة.' },
+  { id:8, ch:1, text:'lim (1/x²) = 0 عند x → −∞.', math:true, answer:true, exp:'' },
+  { id:9, ch:1, text:'الدالة x ↦ |x| مستمرة على ℝ.', math:true, answer:true, exp:'' },
+  { id:10, ch:1, text:'إذا كانت lim f(x) = 0⁺ عند نقطة ما، فإن lim (1/f(x)) = +∞.', math:true, answer:true, exp:'' },
+  { id:11, ch:1, text:'مبرهنة القيم المتوسطة: إذا كانت f مستمرة على [a, b] وكان k عدداً بين f(a) وf(b)، فيوجد c ∈ [a, b] بحيث f(c) = k.', math:true, answer:true, exp:'' },
+  { id:12, ch:1, text:'الدالة المستمرة والرتيبة تماماً على مجال I تقبل مقلوباً مستمراً ورتيباً على f(I).', math:true, answer:true, exp:'' },
+  { id:13, ch:1, text:'إذا كانت lim f(x) = +∞ عند x → x₀، فإن x = x₀ يُسمى مستقيماً مقارباً رأسياً.', math:true, answer:true, exp:'' },
+  { id:14, ch:1, text:'لا يمكن للدالة أن يكون لها حدٌّ منتهٍ عند +∞ إذا كانت متزايدة تماماً على ℝ.', math:true, answer:false, exp:'مثال: f(x) = 1 − 1/x متزايدة وتملك حداً منتهياً 1 عند +∞.' },
+  { id:15, ch:1, text:'شكل عدم التحديد (+∞ − ∞) يعني دائماً أن الحد يساوي صفراً.', math:true, answer:false, exp:'هذا شكل عدم تحديد وليس قاعدة. نتيجته تعتمد كلياً على طبيعة الدالة.' },
+
+  // Chapter 2: الاشتقاقية (16-30)
+  { id:16, ch:2, text:'f\'(a) = lim [f(a+h) − f(a)] / h عند h → 0، وهذا هو تعريف العدد المشتق.', math:true, answer:true, exp:'' },
+  { id:17, ch:2, text:'إذا قبلت f الاشتقاق عند x₀، فإنها مستمرة عند x₀.', math:true, answer:true, exp:'' },
+  { id:18, ch:2, text:'إذا كانت f مستمرة عند x₀، فإنها تقبل الاشتقاق بالضرورة عند x₀.', math:true, answer:false, exp:'الاستمرارية لا تستلزم الاشتقاقية. مثال: f(x) = |x| مستمرة عند 0 لكنها غير قابلة للاشتقاق عنده.' },
+  { id:19, ch:2, text:'الدالة f(x) = |x| تقبل الاشتقاق عند x₀ = 0.', math:true, answer:false, exp:'عند 0 تكون النهاية اليمنى للمشتق +1 واليسرى −1، لذلك لا يوجد عدد مشتق عند x=0.' },
+  { id:20, ch:2, text:'إذا كان f\'(a) = 0، فإن المماس لمنحنى (C_f) عند النقطة ذات الفاصلة a يوازي محور الفواصل.', math:true, answer:true, exp:'' },
+  { id:21, ch:2, text:'معادلة المماس لـ (C_f) عند النقطة A(x₀ ; f(x₀)) هي: y = f\'(x₀)(x − x₀) + f(x₀).', math:true, answer:true, exp:'' },
+  { id:22, ch:2, text:'إذا كان f\'(x) > 0 على مجال I، فإن f متزايدة تزايداً صارماً على I.', math:true, answer:true, exp:'' },
+  { id:23, ch:2, text:'إذا كانت f متزايدة على I، فإن f\'(x) > 0 لكل x ∈ I.', math:true, answer:false, exp:'يمكن أن تكون f متزايدة حتى مع f\'(x) = 0 عند نقاط منعزلة، مثال: f(x) = x³ عند x=0.' },
+  { id:24, ch:2, text:'مشتقة الدالة f(x) = x³ − 3x هي f\'(x) = 3x² − 3.', math:true, answer:true, exp:'' },
+  { id:25, ch:2, text:'مشتقة الدالة f(x) = 1/x هي f\'(x) = −1/x².', math:true, answer:true, exp:'' },
+  { id:26, ch:2, text:'قاعدة مشتقة الضرب: (u × v)\' = u\'v + uv\'.', math:true, answer:true, exp:'' },
+  { id:27, ch:2, text:'مشتقة دالة التركيب: (g∘f)\'(x) = g\'(f(x)) × f\'(x).', math:true, answer:true, exp:'' },
+  { id:28, ch:2, text:'إذا كان f\'(x₀) = 0 وتغيرت إشارة f\' من موجب إلى سالب عند x₀، فإن f تملك نهاية عظمى محلية عند x₀.', math:true, answer:true, exp:'' },
+  { id:29, ch:2, text:'إذا كانت f\'(a) = 0 و f\'\'(a) > 0، فإن f تملك نهاية صغرى محلية عند a.', math:true, answer:true, exp:'' },
+  { id:30, ch:2, text:'الدالة f(x) = x² − 4x + 3 تملك نهاية صغرى محلية عند x = 2 وقيمتها f(2) = −1.', math:true, answer:true, exp:'' },
+
+  // Chapter 3: الأسية واللوغاريتمية (31-45)
+  { id:31, ch:3, text:'الدالة الأسية النيبيرية exp هي الدالة الوحيدة القابلة للاشتقاق على ℝ بحيث f\' = f وf(0) = 1.', math:true, answer:true, exp:'' },
+  { id:32, ch:3, text:'exp(x + y) = exp(x) × exp(y) لكل عددين حقيقيين x، y.', math:true, answer:true, exp:'' },
+  { id:33, ch:3, text:'exp(−x) = 1 / exp(x) لكل عدد حقيقي x.', math:true, answer:true, exp:'' },
+  { id:34, ch:3, text:'exp(0) = 0.', math:true, answer:false, exp:'exp(0) = 1 وليس 0. الدالة الأسية دائماً موجبة صارمة: exp(x) > 0 لكل x ∈ ℝ.' },
+  { id:35, ch:3, text:'العدد e هو صورة العدد 1 بالدالة الأسية، أي e = exp(1) ≈ 2.718.', math:true, answer:true, exp:'' },
+  { id:36, ch:3, text:'الدالة exp متزايدة تزايداً صارماً على ℝ، وصورتها هي ]0 ; +∞[.', math:true, answer:true, exp:'' },
+  { id:37, ch:3, text:'lim exp(x) = 0 عند x → −∞.', math:true, answer:true, exp:'' },
+  { id:38, ch:3, text:'lim exp(x) / xⁿ = +∞ عند x → +∞ لكل n ∈ ℕ (الأسية تسود على كل متعددة حدود).', math:true, answer:true, exp:'' },
+  { id:39, ch:3, text:'الدالة اللوغاريتمية النيبيرية ln هي دالة مقلوب الدالة الأسية exp.', math:true, answer:true, exp:'' },
+  { id:40, ch:3, text:'ln(x × y) = ln(x) + ln(y) لكل x > 0 وy > 0.', math:true, answer:true, exp:'' },
+  { id:41, ch:3, text:'ln(x / y) = ln(x) − ln(y) لكل x > 0 وy > 0.', math:true, answer:true, exp:'' },
+  { id:42, ch:3, text:'ln(e) = 1 وln(1) = 0.', math:true, answer:true, exp:'' },
+  { id:43, ch:3, text:'الدالة ln معرفة على ℝ كاملاً.', math:false, answer:false, exp:'الدالة ln معرفة فقط على ]0 ; +∞[، وغير معرفة للأعداد السالبة أو للصفر.' },
+  { id:44, ch:3, text:'مشتقة الدالة المركبة ln(u) هي: (ln u)\' = u\'/u بشرط u > 0.', math:true, answer:true, exp:'' },
+  { id:45, ch:3, text:'lim x·ln(x) = 0 عند x → 0⁺.', math:true, answer:true, exp:'' },
+
+  // Chapter 4: القوى والجذر النوني (46-60)
+  { id:46, ch:4, text:'تعريف القوى الحقيقية: aᵇ = e^(b·ln a) من أجل كل a > 0 وb حقيقي.', math:true, answer:true, exp:'' },
+  { id:47, ch:4, text:'aˣ · aʸ = a^(x+y) من أجل كل a > 0 وx، y حقيقيين.', math:true, answer:true, exp:'' },
+  { id:48, ch:4, text:'(aˣ)ʸ = a^(xy) من أجل كل a > 0 وx، y حقيقيين.', math:true, answer:true, exp:'' },
+  { id:49, ch:4, text:'الجذر النوني ⁿ√a معرف من أجل أي عدد حقيقي a وكل عدد طبيعي غير معدوم n.', math:true, answer:false, exp:'الجذر ⁿ√a من أجل n زوجي يتطلب a ≥ 0، فهو غير معرف للأعداد السالبة.' },
+  { id:50, ch:4, text:'الدالة fₙ : x ↦ xⁿ (n ∈ ℕ*) مستمرة ومتزايدة تزايداً صارماً على [0 ; +∞[.', math:true, answer:true, exp:'' },
+  { id:51, ch:4, text:'ⁿ√a = a^(1/n) من أجل كل a > 0 وكل n ∈ ℕ*.', math:true, answer:true, exp:'' },
+  { id:52, ch:4, text:'مشتقة الدالة x ↦ xⁿ هي n·xⁿ⁻¹ من أجل n ∈ ℕ*.', math:true, answer:true, exp:'' },
+  { id:53, ch:4, text:'ln(aᵇ) = b·ln(a) من أجل كل a > 0 وb حقيقي.', math:true, answer:true, exp:'' },
+  { id:54, ch:4, text:'الدالة x ↦ aˣ (حيث a > 1) هي دالة متزايدة تزايداً صارماً على ℝ.', math:true, answer:true, exp:'' },
+  { id:55, ch:4, text:'الدالة x ↦ aˣ (حيث 0 < a < 1) هي دالة متزايدة على ℝ.', math:true, answer:false, exp:'عندما يكون 0 < a < 1، تكون الدالة x ↦ aˣ متناقصة تناقصاً صارماً على ℝ.' },
+  { id:56, ch:4, text:'lim aˣ = 0 عند x → −∞ من أجل كل a > 1.', math:true, answer:true, exp:'' },
+  { id:57, ch:4, text:'lim aˣ = +∞ عند x → +∞ من أجل كل a > 1.', math:true, answer:true, exp:'' },
+  { id:58, ch:4, text:'مشتقة الدالة f(x) = aˣ هي f\'(x) = aˣ · ln(a) من أجل a > 0 وa ≠ 1.', math:true, answer:true, exp:'' },
+  { id:59, ch:4, text:'من أجل a > 0 وa ≠ 1، فإن الدالة x ↦ aˣ لها مقلوب هو دالة log_a.', math:true, answer:true, exp:'' },
+  { id:60, ch:4, text:'المعادلة xⁿ = a (n ∈ ℕ*، a ≥ 0) لها حل وحيد موجب هو x = ⁿ√a.', math:true, answer:true, exp:'' },
+];
+
+const CHAPTERS = {
+  1: { title:'النهايات والاستمرارية', range:[1,15], cls:'ch1', color:'var(--ch1)', icon:'📐' },
+  2: { title:'الاشتقاقية', range:[16,30], cls:'ch2', color:'var(--ch2)', icon:'∫' },
+  3: { title:'الدوال الأسية واللوغاريتمية', range:[31,45], cls:'ch3', color:'var(--ch3)', icon:'eˣ' },
+  4: { title:'اتزايد المقارن والجذر النوني', range:[46,60], cls:'ch4', color:'var(--ch4)', icon:'ⁿ√' },
+};
+
+let answers = {};
+let submitted = false;
+let timerInterval;
+let seconds = 0;
+
+// ---- BUILD UI ----
+function buildQuiz() {
+  const main = document.getElementById('main');
+  main.innerHTML = '';
+
+  for(let chNum = 1; chNum <= 4; chNum++) {
+    const ch = CHAPTERS[chNum];
+    const chqs = QUESTIONS.filter(q => q.ch === chNum);
+
+    const block = document.createElement('div');
+    block.className = `chapter-block ${ch.cls}`;
+    block.id = `chapter-${chNum}`;
+
+    // Chapter header
+    block.innerHTML = `
+      <div class="chapter-header">
+        <div class="ch-num">${ch.icon}</div>
+        <div class="ch-info">
+          <div class="ch-title">${ch.title}</div>
+          <div class="ch-meta">أسئلة ${ch.range[0]} – ${ch.range[1]} · ${chqs.length} سؤالاً</div>
+        </div>
+        <div class="ch-score-badge" id="ch-score-${chNum}">—/${chqs.length}</div>
+      </div>
+    `;
+
+    // Questions
+    chqs.forEach(q => {
+      const card = document.createElement('div');
+      card.className = 'q-card';
+      card.id = `q-${q.id}`;
+      card.innerHTML = `
+        <div class="q-inner">
+          <div class="q-num">${q.id}</div>
+          <div class="q-text">${q.text}</div>
+          <div class="q-result-icon" id="icon-${q.id}"></div>
+          <div class="q-btns">
+            <button class="btn-tf" id="btnT-${q.id}" onclick="selectAnswer(${q.id}, true)" title="صح">✓</button>
+            <button class="btn-tf" id="btnF-${q.id}" onclick="selectAnswer(${q.id}, false)" title="خطأ">✗</button>
+          </div>
+        </div>
+        <div class="q-explanation" id="exp-${q.id}">
+          <strong>التصحيح:</strong> ${q.exp || 'العبارة ' + (q.answer ? 'صحيحة ✓' : 'خاطئة ✗') + '.'}
+          ${q.exp ? '' : ''}
+        </div>
+      `;
+      block.appendChild(card);
+    });
+
+    main.appendChild(block);
+  }
+}
+
+function selectAnswer(id, val) {
+  if(submitted) return;
+  answers[id] = val;
+
+  const btnT = document.getElementById(`btnT-${id}`);
+  const btnF = document.getElementById(`btnF-${id}`);
+  btnT.className = 'btn-tf' + (val === true ? ' selected-true' : '');
+  btnF.className = 'btn-tf' + (val === false ? ' selected-false' : '');
+
+  updateStats();
+}
+
+function updateStats() {
+  const count = Object.keys(answers).length;
+  document.getElementById('statAnswered').textContent = count;
+  document.getElementById('progressFill').style.width = (count/60*100) + '%';
+  document.getElementById('progressPct').textContent = Math.round(count/60*100) + '%';
+
+  // Update floating score
+  if(count > 0) {
+    document.getElementById('floatingScore').classList.add('visible');
+  }
+
+  // Live correct/wrong from answered
+  let correct = 0, wrong = 0;
+  for(let id in answers) {
+    const q = QUESTIONS.find(q => q.id == id);
+    if(answers[id] === q.answer) correct++; else wrong++;
+  }
+  document.getElementById('fsCorrect').textContent = correct;
+  document.getElementById('fsWrong').textContent = wrong;
+}
+
+function scrollToChapter(id, btn) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  if(id === 'all') { window.scrollTo({top:0, behavior:'smooth'}); return; }
+  const num = id.replace('ch','');
+  const el = document.getElementById(`chapter-${num}`);
+  if(el) el.scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+function submitQuiz() {
+  const unanswered = QUESTIONS.filter(q => answers[q.id] === undefined);
+  if(unanswered.length > 0 && !confirm(`لم تُجب على ${unanswered.length} سؤالاً بعد. هل تريد التصحيح الآن؟`)) return;
+
+  submitted = true;
+  clearInterval(timerInterval);
+
+  let correct = 0, wrong = 0, unans = 0;
+  const chScores = {1:{c:0,t:15}, 2:{c:0,t:15}, 3:{c:0,t:15}, 4:{c:0,t:15}};
+
+  QUESTIONS.forEach(q => {
+    const card = document.getElementById(`q-${q.id}`);
+    const icon = document.getElementById(`icon-${q.id}`);
+
+    if(answers[q.id] === undefined) {
+      unans++;
+      card.style.opacity = '0.5';
+    } else if(answers[q.id] === q.answer) {
+      correct++;
+      card.classList.add('result-correct');
+      icon.textContent = '✓';
+      chScores[q.ch].c++;
+    } else {
+      wrong++;
+      card.classList.add('result-wrong');
+      icon.textContent = '✗';
+    }
+  });
+
+  // Chapter scores
+  for(let ch in chScores) {
+    const s = chScores[ch];
+    const badge = document.getElementById(`ch-score-${ch}`);
+    badge.textContent = `${s.c}/${s.t}`;
+    badge.style.color = s.c >= s.t*0.7 ? 'var(--correct)' : s.c >= s.t*0.5 ? 'var(--teal-light)' : 'var(--wrong)';
+  }
+
+  // Show result
+  setTimeout(() => showResult(correct, wrong, unans, chScores), 600);
+}
+
+function showResult(correct, wrong, unans, chScores) {
+  const pct = Math.round(correct/60*100);
+  const overlay = document.getElementById('resultOverlay');
+  const modal = document.getElementById('resultModal');
+
+  document.getElementById('rbCorrect').textContent = correct;
+  document.getElementById('rbWrong').textContent = wrong;
+  document.getElementById('rbPct').textContent = pct + '%';
+  document.getElementById('rbUnanswered').textContent = unans;
+  document.getElementById('resultGrade').textContent = `${correct}/60`;
+
+  let grade, emoji, label, sublabel;
+  if(pct >= 90) {
+    grade='excellent'; emoji='🏆'; label='ممتاز!'; sublabel='أداء استثنائي. أنت تتقن هذه الدروس بامتياز.';
+  } else if(pct >= 75) {
+    grade='excellent'; emoji='🎓'; label='جيد جداً'; sublabel='نتيجة رائعة! مراجعة بسيطة ستجعلك مثالياً.';
+  } else if(pct >= 60) {
+    grade='good'; emoji='📚'; label='جيد'; sublabel='نتيجة مقبولة. راجع الأسئلة الخاطئة وكررها.';
+  } else if(pct >= 50) {
+    grade='good'; emoji='🔄'; label='متوسط'; sublabel='تحتاج إلى مراجعة أعمق لبعض الدروس.';
+  } else {
+    grade='poor'; emoji='💡'; label='يحتاج مراجعة'; sublabel='لا تستسلم! راجع الكتاب والأمثلة مجدداً.';
+  }
+
+  document.getElementById('resultEmoji').textContent = emoji;
+  document.getElementById('resultLabel').textContent = label;
+  document.getElementById('resultSublabel').textContent = sublabel;
+  overlay.className = `result-overlay grade-${grade}`;
+
+  // Chapter bars
+  const cbData = [
+    {id:1, name:'النهايات والاستمرارية', color:'var(--ch1)'},
+    {id:2, name:'الاشتقاقية', color:'var(--ch2)'},
+    {id:3, name:'الأسية واللوغاريتمية', color:'var(--ch3)'},
+    {id:4, name:'القوى والجذر النوني', color:'var(--ch4)'},
+  ];
+  cbData.forEach(cd => {
+    const s = chScores[cd.id];
+    const p = Math.round(s.c/s.t*100);
+    document.getElementById(`cbRow${cd.id}`).innerHTML = `
+      <div class="cb-name">${cd.name}</div>
+      <div class="cb-bar-track">
+        <div class="cb-bar-fill" style="width:0%;background:${cd.color}" data-pct="${p}"></div>
+      </div>
+      <div class="cb-pct" style="color:${cd.color}">${p}%</div>
+    `;
+  });
+
+  overlay.classList.add('show');
+
+  // Animate bars
+  setTimeout(() => {
+    document.querySelectorAll('.cb-bar-fill').forEach(b => {
+      b.style.width = b.dataset.pct + '%';
+    });
+  }, 300);
+
+  // Confetti if good score
+  if(pct >= 70) spawnConfetti();
+
+  document.getElementById('statCorrect').textContent = correct;
+}
+
+function closeResult() {
+  document.getElementById('resultOverlay').classList.remove('show');
+  // Flash wrong answers
+  setTimeout(() => {
+    document.querySelectorAll('.q-card.result-wrong').forEach(c => {
+      c.scrollIntoView({behavior:'smooth', block:'nearest'});
+    });
+  }, 400);
+}
+
+function resetQuiz() {
+  answers = {};
+  submitted = false;
+  seconds = 0;
+  document.getElementById('resultOverlay').classList.remove('show');
+  buildQuiz();
+  updateStats();
+  document.getElementById('statCorrect').textContent = '—';
+  document.getElementById('floatingScore').classList.remove('visible');
+  startTimer();
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+// Timer
+function startTimer() {
+  clearInterval(timerInterval);
+  timerInterval = setInterval(() => {
+    seconds++;
+    const m = Math.floor(seconds/60).toString().padStart(2,'0');
+    const s = (seconds%60).toString().padStart(2,'0');
+    document.getElementById('statTime').textContent = `${m}:${s}`;
+  }, 1000);
+}
+
+// Confetti
+function spawnConfetti() {
+  const colors = ['#d4a843','#22c55e','#2dd4bf','#7c3aed','#ef4444','#f0c96b'];
+  for(let i=0; i<80; i++) {
+    setTimeout(() => {
+      const c = document.createElement('div');
+      c.className = 'confetti-piece';
+      c.style.left = Math.random()*100 + 'vw';
+      c.style.background = colors[Math.floor(Math.random()*colors.length)];
+      c.style.width = (8+Math.random()*8) + 'px';
+      c.style.height = (8+Math.random()*8) + 'px';
+      c.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+      c.style.animationDuration = (2+Math.random()*2) + 's';
+      c.style.animationDelay = Math.random()*0.5 + 's';
+      document.body.appendChild(c);
+      setTimeout(() => c.remove(), 4000);
+    }, i*30);
+  }
+}
+
+// ===== SPLASH SCREEN =====
+(function() {
+  const splash = document.getElementById('splash');
+  const cornerLogo = document.getElementById('cornerLogo');
+
+  // After 2.5s start fade out, hide at 3.3s
+  setTimeout(() => {
+    splash.classList.add('fade-out');
+  }, 2500);
+
+  setTimeout(() => {
+    splash.classList.add('hidden');
+    // Show corner logo after splash
+    cornerLogo.classList.add('visible');
+  }, 3300);
+})();
+
+// ===== THEME TOGGLE =====
+function toggleTheme() {
+  const body = document.body;
+  const btn = document.getElementById('themeToggle');
+  const isLight = body.classList.toggle('light-mode');
+  btn.textContent = isLight ? '🌙' : '☀️';
+  localStorage.setItem('theme', isLight ? 'light' : 'dark');
+}
+
+// Restore saved theme
+(function() {
+  const saved = localStorage.getItem('theme');
+  if(saved === 'light') {
+    document.body.classList.add('light-mode');
+    document.getElementById('themeToggle').textContent = '🌙';
+  }
+})();
+
+// Init
+buildQuiz();
+startTimer();
+</script>
+</body>
+</html>
