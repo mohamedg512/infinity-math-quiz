@@ -11,35 +11,7 @@
   /* Accent:  Teal/Cyan  #00bcd4 → Turquoise #00e5c8 */
 
   :root {
-    /* Dark mode (default) */
-    --bg: #050d1f;
-    --surface: #0a1628;
-    --surface2: #0f2040;
-    --surface3: #162a52;
-    --primary: #1a6fd4;
-    --primary-light: #4da6ff;
-    --primary-dim: rgba(26,111,212,0.15);
-    --teal: #00d4c8;
-    --teal-light: #4fffeb;
-    --teal-dim: rgba(0,212,200,0.12);
-    --correct: #22c55e;
-    --correct-dim: rgba(34,197,94,0.15);
-    --wrong: #ef4444;
-    --wrong-dim: rgba(239,68,68,0.15);
-    --text: #e2eeff;
-    --text-muted: #7a9cc8;
-    --border: rgba(0,212,200,0.25);
-    --border-soft: rgba(255,255,255,0.07);
-    --ch1: #1a6fd4; --ch1d: rgba(26,111,212,0.15);
-    --ch2: #00bcd4; --ch2d: rgba(0,188,212,0.15);
-    --ch3: #1565c0; --ch3d: rgba(21,101,192,0.15);
-    --ch4: #0097a7; --ch4d: rgba(0,151,167,0.15);
-    --r: 14px;
-    --shadow-glow: 0 8px 32px rgba(0,212,200,0.2);
-  }
-
-  /* ===== LIGHT MODE ===== */
-  body.light-mode {
+    /* Light mode (default) */
     --bg: #eef4ff;
     --surface: #ffffff;
     --surface2: #ddeaff;
@@ -62,7 +34,35 @@
     --ch2: #0097a7; --ch2d: rgba(0,151,167,0.1);
     --ch3: #1565c0; --ch3d: rgba(21,101,192,0.1);
     --ch4: #00838f; --ch4d: rgba(0,131,143,0.1);
+    --r: 14px;
     --shadow-glow: 0 8px 32px rgba(26,111,212,0.15);
+  }
+
+  /* ===== DARK MODE ===== */
+  body.dark-mode {
+    --bg: #050d1f;
+    --surface: #0a1628;
+    --surface2: #0f2040;
+    --surface3: #162a52;
+    --primary: #1a6fd4;
+    --primary-light: #4da6ff;
+    --primary-dim: rgba(26,111,212,0.15);
+    --teal: #00d4c8;
+    --teal-light: #4fffeb;
+    --teal-dim: rgba(0,212,200,0.12);
+    --correct: #22c55e;
+    --correct-dim: rgba(34,197,94,0.15);
+    --wrong: #ef4444;
+    --wrong-dim: rgba(239,68,68,0.15);
+    --text: #e2eeff;
+    --text-muted: #7a9cc8;
+    --border: rgba(0,212,200,0.25);
+    --border-soft: rgba(255,255,255,0.07);
+    --ch1: #1a6fd4; --ch1d: rgba(26,111,212,0.15);
+    --ch2: #00bcd4; --ch2d: rgba(0,188,212,0.15);
+    --ch3: #1565c0; --ch3d: rgba(21,101,192,0.15);
+    --ch4: #0097a7; --ch4d: rgba(0,151,167,0.15);
+    --shadow-glow: 0 8px 32px rgba(0,212,200,0.2);
   }
 
   * { margin:0; padding:0; box-sizing:border-box; }
@@ -85,7 +85,7 @@
     background-size: 60px 60px;
     pointer-events:none; z-index:0;
   }
-  body.light-mode::before {
+  body.dark-mode::before {
     background-image:
       linear-gradient(rgba(26,111,212,0.06) 1px, transparent 1px),
       linear-gradient(90deg, rgba(26,111,212,0.06) 1px, transparent 1px);
@@ -1262,18 +1262,19 @@ function spawnConfetti() {
 function toggleTheme() {
   const body = document.body;
   const btn = document.getElementById('themeToggle');
-  const isLight = body.classList.toggle('light-mode');
-  btn.textContent = isLight ? '🌙' : '☀️';
-  localStorage.setItem('theme', isLight ? 'light' : 'dark');
+  const isDark = body.classList.toggle('dark-mode');
+  btn.textContent = isDark ? '☀️' : '🌙';
+  localStorage.setItem('theme', isDark ? 'dark' : 'light');
 }
 
 // Restore saved theme
 (function() {
   const saved = localStorage.getItem('theme');
-  if(saved === 'light') {
-    document.body.classList.add('light-mode');
-    document.getElementById('themeToggle').textContent = '🌙';
+  if(saved === 'dark') {
+    document.body.classList.add('dark-mode');
+    document.getElementById('themeToggle').textContent = '☀️';
   }
+  // default is light, button shows moon
 })();
 
 // Init
